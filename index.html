@@ -14,9 +14,6 @@
 </head>
 <body>
     <div id="app">
-        <!-- Контент будет рендериться движком -->
-   
-    
     <template id="main-template">
         <header class="header">
             <div class="logo">Casino-app.store</div>
@@ -34,7 +31,6 @@
                 <button class="btn register-btn">Регистрация</button>
             </div>
         </header>
-        
         <main class="main-content">
             <section class="hero">
                 <h1>Наши лучшие приложения</h1>
@@ -72,7 +68,6 @@
             <p>© 2025 Casino-App.Store. Все права защищены.</p>
         </footer>
     </template>
-    
     <template id="login-template">
         <div class="auth-modal">
             <h2>Вход</h2>
@@ -98,10 +93,9 @@
             </form>
         </div>
     </template>
-</div>
 <script src="/cache/engine.js" defer></script>
-<script>if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/cache/service-worker.js").then(() => console.log("✅ Service Worker зарегистрирован")).catch((error) => console.error("❌ Ошибка SW:", error)); } </script>
+<script>if ("serviceWorker" in navigator) { navigator.serviceWorker.register("cache/service-worker.js").then(() => console.log("✅ Service Worker зарегистрирован")).catch((error) => console.error("❌ Ошибка SW:", error)); } </script>
 <script>function updateDate() { const dateBlock = document.querySelector(".data-block"); if (dateBlock) { const today = new Date(); const day = String(today.getDate()).padStart(2, '0'); const month = String(today.getMonth() + 1).padStart(2, '0'); const year = today.getFullYear(); dateBlock.textContent = `Актуально на ${year}.${month}.${day}`; } } updateDate(); </script>
-
+</div>
 </body>
 </html>
