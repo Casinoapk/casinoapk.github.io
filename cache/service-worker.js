@@ -24,21 +24,17 @@ self.addEventListener("activate", (event) => {
 });
 self.addEventListener("fetch", (event) => {
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                console.log("✅ Отдаём из кеша:", event.request.url);
-                return cachedResponse;
-            }
-            return fetch(event.request).then((response) => {
-                if (!response || response.status !== 200 || response.type !== "basic") {
-                    return response;
-                }
-                const responseClone = response.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseClone);
-                });
-                return response;
-            }).catch(() => new Response("⚠️ Ошибка: Нет сети", { status: 500 }));
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.match(event.request).then((cachedResponse) => {
+                const fetchPromise = fetch(event.request).then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200 && networkResponse.type === "basic") {
+                        cache.put(event.request, networkResponse.clone());
+                    }
+                    return networkResponse;
+                }).catch(() => cachedResponse || new Response("⚠️ Ошибка: Нет сети", { status: 500 }));
+                
+                return cachedResponse || fetchPromise;
+            });
         })
     );
 });
