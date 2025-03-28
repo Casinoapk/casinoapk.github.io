@@ -483,26 +483,29 @@ class SiteEngine {
         this.startAutoScroll();
     }
     
-    startAutoScroll() {
-        if (this.carouselInterval) {
-            clearInterval(this.carouselInterval);
-        }
-        
-        this.carouselInterval = setInterval(() => {
-            const carouselInner = document.querySelector('.carousel-inner');
-            const items = document.querySelectorAll('.carousel-item');
-            
-            let currentTransform = carouselInner.style.transform;
-            let currentIndex = 0;
-            
-            if (currentTransform) {
-                currentIndex = parseInt(currentTransform.match(/translateX\(-(.*?)%\)/)[1]) / 100;
-            }
-            
-            currentIndex = (currentIndex < items.length - 1) ? currentIndex + 1 : 0;
-            carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }, 5000);
+startAutoScroll() {
+    if (this.carouselInterval) {
+        clearInterval(this.carouselInterval);
     }
+
+    this.carouselInterval = setInterval(() => {
+        const carouselInner = document.querySelector('.carousel-inner');
+        const items = document.querySelectorAll('.carousel-item');
+
+        let currentIndex = 0;
+        let currentTransform = carouselInner.style.transform;
+
+        if (currentTransform) {
+            const match = currentTransform.match(/translateX\(-(\d+)%\)/);
+            if (match) {
+                currentIndex = parseInt(match[1]) / 100;
+            }
+        }
+
+        currentIndex = (currentIndex < items.length - 1) ? currentIndex + 1 : 0;
+        carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }, 250);
+}
     
     resetAutoScroll() {
         clearInterval(this.carouselInterval);
