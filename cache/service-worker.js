@@ -1,8 +1,8 @@
 // Define the cache name and the list of URLs to cache
 const CACHE_NAME = "casino-app-cache-v1";
 const urlsToCache = [
-    "../cache/engin.css",
-    "../cache/engin.js"
+    "/cache/engin.css",
+    "/cache/engin.js"
 ];
 
 // Event listener for the 'install' event
