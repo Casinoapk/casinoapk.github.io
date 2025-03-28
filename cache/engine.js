@@ -55,25 +55,28 @@ class SiteEngine {
     cacheCSS() {
         this.cache.css.main = `
         :root {
-    --primary-color: #2980b9; /* Slightly darker primary color */
-    --secondary-color: #1f6f9b; /* Darker secondary color */
-    --text-color: #222; /* Darker text color */
-    --light-color: #ffffff; /* Pure white background */
-    --dark-color: #111; /* Darker background color */
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Increased shadow opacity */
+    --primary-color: #ff6bcb;
+    --secondary-color: #ffde59;
+    --accent-color: #6b5bff;
+    --text-color: #ffffff;
+    --light-color: #fdf3f3;
+    --dark-color: #222;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    --glow: 0 0 10px rgba(255, 107, 203, 0.8);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
     color: var(--text-color);
-    line-height: 1.6;
-    background-color: var(--light-color);
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    background-attachment: fixed;
+    transition: background 0.5s ease-in-out;
 }
 
 #app {
@@ -83,18 +86,26 @@ body {
 }
 
 .header {
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     color: white;
     padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: var(--shadow);
+    border-bottom: 2px solid var(--secondary-color);
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
+    text-shadow: var(--glow);
+    animation: flicker 1.5s infinite alternate;
+}
+
+@keyframes flicker {
+    from { text-shadow: var(--glow); }
+    to { text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px var(--primary-color); }
 }
 
 .nav-list {
@@ -109,67 +120,89 @@ body {
 .nav-list a {
     color: white;
     text-decoration: none;
-    transition: opacity 0.3s;
+    font-weight: bold;
+    transition: all 0.3s;
+    position: relative;
 }
 
-.nav-list a:hover {
-    opacity: 0.8;
+.nav-list a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -3px;
+    width: 0;
+    height: 2px;
+    background-color: var(--secondary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-list a:hover::after {
+    width: 100%;
 }
 
 .btn {
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1.5rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s;
+    font-weight: bold;
+    box-shadow: var(--shadow);
 }
 
 .login-btn {
-    background-color: transparent;
+    background: transparent;
     color: white;
-    border: 1px solid white;
-    margin-right: 0.5rem;
+    border: 2px solid white;
 }
 
 .login-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Increased hover opacity */
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .register-btn {
-    background-color: white;
-    color: var(--primary-color);
+    background: var(--secondary-color);
+    color: var(--dark-color);
+    transition: background 0.3s ease-in-out;
 }
 
 .register-btn:hover {
-    background-color: #e0e0e0; /* Lighter hover background */
+    background: #ffd700;
 }
 
 .main-content {
     flex: 1;
     padding: 2rem;
+    text-align: center;
 }
 
 .hero {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding: 2rem;
-    background-color: var(--secondary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
-    border-radius: 8px;
+    padding: 3rem;
+    border-radius: 12px;
     box-shadow: var(--shadow);
+    text-shadow: var(--glow);
+    animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.02); }
 }
 
 .hero h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin-bottom: 1rem;
 }
 
 .carousel {
     position: relative;
-    margin: 2rem 0;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: var(--shadow);
+    border: 2px solid var(--primary-color);
 }
 
 .carousel-inner {
@@ -185,222 +218,92 @@ body {
 .carousel-image {
     width: 100%;
     height: 400px;
-    display: block;
     object-fit: cover;
-}
-
-.nav-btn {
-    display: none;
-}
-
-.toggleMenu {
-    display: none;
+    border-radius: 12px;
 }
 
 .carousel-control {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.6); /* Increased background opacity */
-    color: white;
-    border: none;
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--dark-color);
     padding: 1rem;
+    font-size: 2rem;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 1.5rem;
-    z-index: 10;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .carousel-control:hover {
-    background-color: rgba(0, 0, 0, 0.8); /* Increased hover opacity */
-}
-
-.carousel-control.prev {
-    left: 0;
-    border-radius: 0 4px 4px 0;
-}
-
-.carousel-control.next {
-    right: 0;
-    border-radius: 4px 0 0 4px;
+    background: var(--secondary-color);
+    transform: translateY(-50%) scale(1.1);
 }
 
 .download-btn {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 12px 30px;
-    background-color: #27ae60; /* Darker green */
-    color: white;
-    border: none;
+    padding: 14px 35px;
+    background: var(--secondary-color);
+    color: var(--dark-color);
+    font-size: 1.2rem;
     border-radius: 30px;
-    font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Increased shadow */
+    box-shadow: 0 4px 15px rgba(255, 206, 84, 0.7);
     transition: all 0.3s;
-    z-index: 20;
 }
 
 .download-btn:hover {
-    background-color: #229954; /* Darker hover green */
-    transform: translateX(-50%) scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Increased shadow */
-}
-
-.app-info {
-    position: absolute;
-    bottom: 90px;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.8); /* Increased background opacity */
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-.app-title {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
+    background: #ffd700;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 206, 84, 0.9);
 }
 
 .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
-    margin: 2rem 0;
+    margin: 3rem 0;
 }
 
 .feature {
-    background-color: white;
+    background: linear-gradient(135deg, var(--light-color), #ffe4e1);
     padding: 1.5rem;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: var(--shadow);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(255, 206, 84, 0.7);
 }
 
 .feature h3 {
     color: var(--primary-color);
     margin-bottom: 0.5rem;
+    text-shadow: var(--glow);
 }
 
 .footer {
     text-align: center;
-    padding: 1.5rem;
-    background-color: var(--dark-color);
-    color: white;
-}
-
-.auth-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Increased shadow */
-    z-index: 100;
-    max-width: 400px;
-    width: 90%;
-}
-
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.auth-form input {
-    padding: 0.75rem;
-    border: 1px solid #ccc; /* Lighter border */
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.auth-form .btn {
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, var(--dark-color), #444);
     color: white;
-    padding: 0.75rem;
 }
 
-.auth-form .btn:hover {
-    background-color: var(--secondary-color);
-}
-
-.btn-back {
-    background-color: #c0392b !important; /* Darker red */
-}
-
-.btn-back:hover {
-    background-color: #a93226 !important; /* Darker hover red */
-}
-
-/* Мобильные стили */
 @media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .nav {
-        width: 100%;
-        margin: 1rem 0;
-    }
-
-    .nav-list {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .nav-list.show {
-        display: flex;
-    }
-
-    .nav-list li {
-        margin: 0.5rem 0;
-        margin-left: 0;
-    }
-
-    .auth-buttons {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .btn {
-        width: 48%;
-        padding: 0.75rem;
-    }
-
     .hero h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
     }
-
     .carousel-image {
         height: 300px;
     }
-
-    .download-btn {
-        padding: 10px 20px;
-        font-size: 1rem;
-        bottom: 20px;
-    }
-
-    .app-info {
-        bottom: 70px;
-        padding: 15px;
-    }
-
-    .app-title {
-        font-size: 1.4rem;
-    }
-
     .features {
         grid-template-columns: 1fr;
     }
 }
+
 
         
     `;
