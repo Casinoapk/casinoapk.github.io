@@ -755,7 +755,7 @@ startAutoScroll() {
 
         currentIndex = (currentIndex < items.length - 1) ? currentIndex + 1 : 0;
         carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
-    }, 250);
+    }, 1000);
 }
     
     resetAutoScroll() {
