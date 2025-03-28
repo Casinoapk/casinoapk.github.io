@@ -1,11 +1,8 @@
-// Define the cache name and the list of URLs to cache
 const CACHE_NAME = "casino-app-cache-v1";
 const urlsToCache = [
-    "/cache/engin.css",
-    "/cache/engin.js"
+    "/cache/engine.css",
+    "/cache/engine.js"
 ];
-
-// Event listener for the 'install' event
 self.addEventListener("install", (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -14,8 +11,6 @@ self.addEventListener("install", (event) => {
         })
     );
 });
-
-// Event listener for the 'activate' event
 self.addEventListener("activate", (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
@@ -27,8 +22,6 @@ self.addEventListener("activate", (event) => {
         })
     );
 });
-
-// Event listener for the 'fetch' event
 self.addEventListener("fetch", (event) => {
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
