@@ -1,151 +1,107 @@
-<!doctype html>
-<html lang="ru-RU">
-
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'>
-    <style>
-        img:is([sizes="auto" i], [sizes^="auto," i]) {
-            contain-intrinsic-size: 3000px 1500px
-        }
-    </style>
-    <style>
-        .critical-content {
-            font-family: Arial, sans-serif;
-            font-size: 18px;
-            line-height: 1.6;
-            color: #eeeeee;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 10px;
-        }
-
-        .lazy-load {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .lazy-load.loaded {
-            opacity: 1;
-        }
-    </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-    <link media="all" href="wp-content/cache/autoptimize/css/autoptimize_49c217c5564ecfbe903628f531936c3c.css"
-        rel="stylesheet">
-    <link media="screen" href="wp-content/cache/autoptimize/css/autoptimize_4d27333d6097073084559bb25c22ba66.css"
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Casino-App.store Портал приложений казино</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="article:modified_time" content="2025-03-20T17:30:08+00:00">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="casino-app.store">
+    <meta property="og:description"
+    <title>casino-app</title>
+    <link rel="stylesheet" href="/cache/engine.css">
+    <title>casino-app</title>
 </head>
 <body>
+    <div id="app">
+        <!-- Контент будет рендериться движком -->
+   
+    
+    <template id="main-template">
+        <header class="header">
+            <div class="logo">Casino-app.store</div>
+            <nav class="nav">
+                <button class="nav-btn mobile-only" id="menu-btn">☰</button>
+                <ul class="nav-list" id="nav-list">
+                    <li><a href="#">Главная</a></li>
+                    <li><a href="#">Приложения</a></li>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn login-btn">Вход</button>
+                <button class="btn register-btn">Регистрация</button>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <section class="hero">
+                <h1>Наши лучшие приложения</h1>
+                <p>Скачивайте популярные приложения прямо сейчас</p>
+            </section>
+            
+            <section class="carousel-section">
+                <h2>Топ-16 приложений</h2>
+                <div class="carousel-container">
+                    <div class="carousel">
+                        <div class="carousel-inner"></div>
+                    </div>
+                    <button class="carousel-control prev">❮</button>
+                    <button class="carousel-control next">❯</button>
+                </div>
+            </section>
+            
+            <section class="features">
+                <div class="feature">
+                    <h3>Быстро</h3>
+                    <p>Мгновенное скачивание приложений</p>
+                </div>
+                <div class="feature">
+                    <h3>Безопасно</h3>
+                    <p>Все приложения проверены на вирусы</p>
+                </div>
+                <div class="feature">
+                    <h3>Удобно</h3>
+                    <p>Простое управление и установка</p>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>© 2025 Casino-App.Store. Все права защищены.</p>
+        </footer>
+    </template>
+    
+    <template id="login-template">
+        <div class="auth-modal">
+            <h2>Вход</h2>
+            <form class="auth-form">
+                <input type="text" placeholder="Email или логин" required>
+                <input type="password" placeholder="Пароль" required>
+                <button type="submit" class="btn">Войти</button>
+                <button type="button" class="btn btn-back">Назад</button>
+            </form>
+        </div>
+    </template>
+    
+    <template id="register-template">
+        <div class="auth-modal">
+            <h2>Регистрация</h2>
+            <form class="auth-form">
+                <input type="text" placeholder="Имя" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Пароль" required>
+                <input type="password" placeholder="Повторите пароль" required>
+                <button type="submit" class="btn">Зарегистрироваться</button>
+                <button type="button" class="btn btn-back">Назад</button>
+            </form>
+        </div>
+    </template>
+</div>
+<script src="/cache/engine.js" defer></script>
+<script>if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/cache/service-worker.js").then(() => console.log("✅ Service Worker зарегистрирован")).catch((error) => console.error("❌ Ошибка SW:", error)); } </script>
+<script>function updateDate() { const dateBlock = document.querySelector(".data-block"); if (dateBlock) { const today = new Date(); const day = String(today.getDate()).padStart(2, '0'); const month = String(today.getMonth() + 1).padStart(2, '0'); const year = today.getFullYear(); dateBlock.textContent = `Актуально на ${year}.${month}.${day}`; } } updateDate(); </script>
 
-	<div class="header">
-		<div class="logo">
-			<img id="logo" src="https://i.ibb.co/3yYk90Y1/logo.png" alt="Логотип">
-			<text id="logo-text">Casino-App.store</span>
-		</div>
-		<div class="menu-container">
-			<div class="burger" id="burger">☰</div>
-			<div class="menu" id="menu">
-				<a href="#">Главная</a>
-				<a href="#">Игры</a>
-				<a href="#">Новые игры</a>
-				<a href="#">Контакты</a>
-				<a href="#">О нас</a>
-			</div>
-		</div>
-	</div>
-		<div class="search-container">
-			<button class="search-btn">🔍</button>
-			<input type="text" class="search-box" placeholder="Поиск...">
-		        </div>
-		</div>
-		
-		<canvas id="gameCanvas"></canvas>
-		<div class="scene"></div>
-	<script>
-
-			const searchBtn = document.querySelector(".search-btn");
-			const searchContainer = document.querySelector(".search-container");
-			const searchBox = document.querySelector(".search-box");
-			
-			searchBtn.addEventListener("click", function() {
-			searchContainer.classList.toggle("open");
-			if (!searchContainer.classList.contains("open")) {
-			setTimeout(() => {
-			searchBox.value = "";
-			}, 300);
-			}
-			});
-			
-			document.addEventListener("click", function(event) {
-			if (!searchContainer.contains(event.target)) {
-			searchContainer.classList.remove("open");
-			searchBox.value = "";
-			}
-			});
-			
-			searchBtn.addEventListener("click", function(event) {
-			event.stopPropagation();
-			});
-		// Бургер-меню
-        const burger = document.getElementById("burger");
-        const menu = document.getElementById("menu");
-
-        burger.addEventListener("click", function () {
-            menu.classList.toggle("open");
-            burger.classList.toggle("hidden"); // Скрываем бургер-меню при открытии
-        });
-
-        // Закрытие меню при клике вне его
-        document.addEventListener("click", function (event) {
-            if (!menu.contains(event.target) && !burger.contains(event.target)) {
-                menu.classList.remove("open");
-                burger.classList.remove("hidden"); // Показываем бургер-меню при закрытии
-            }
-        });
-
-        // Логика вращения логотипа (ускорение -> замедление)
-        const logo = document.getElementById("logo");
-
-        function startRotation() {
-            logo.style.animation = "spin-fast 60s linear"; // Ускоренное вращение 1 минута
-            setTimeout(() => {
-                logo.style.animation = "spin-slow 120s linear"; // Замедленное вращение 2 минуты
-            }, 60000);
-        }
-
-        startRotation();
-
-					document.addEventListener("DOMContentLoaded", () => {
-					const scene = document.querySelector(".scene");
-					
-					const boxWidth = 50;
-					const boxHeight = 50;
-					const rows = 4;
-					const columns = 4;
-					const margin = 20;
-					
-					let currentBoxCount = 0;
-					
-					for (let row = 0; row < rows; row++) { for (let col=0; col < columns; col++) { let box=document.createElement("div");
-						box.classList.add("box"); box.addEventListener("dblclick", ()=> {
-						let link = document.createElement("a");
-						link.href = `assets/приложение_${currentBoxCount + 1}.apk`;
-						link.download = `приложение_${currentBoxCount + 1}.apk`;
-						document.body.appendChild(link);
-						link.click();
-						document.body.removeChild(link);
-						});
-					
-						scene.appendChild(box);
-						currentBoxCount++;
-						}
-						}
-						});
-	</script>
-<script defer src="wp-content/cache/autoptimize/js/autoptimize_7552c572625a70553a09b1e3e9a95801.js"></script>
 </body>
-
 </html>
