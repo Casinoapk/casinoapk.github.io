@@ -26,8 +26,8 @@ class SiteEngine {
         for (let i = 1; i <= count; i++) {
             items.push({
                 id: i,
-                title: `Приложение ${i}`,
-                description: `Уникальные функции и возможности приложения ${i}`,
+                title: `${i}`,
+                description: `${i}`,
                 color: colors[i - 1],
                 apkPath: `app/${i}.apk`
             });
