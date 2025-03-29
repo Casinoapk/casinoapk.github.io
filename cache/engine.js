@@ -1,3 +1,8 @@
+fetch("clear-cache.php", { method: "POST" })
+    .then(response => response.json())
+    .then(data => console.log("Результат:", data.message))
+    .catch(error => console.error("Ошибка:", error));
+
 class SiteEngine {
     constructor() {
         this.cache = {
