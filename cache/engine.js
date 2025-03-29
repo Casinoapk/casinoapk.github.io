@@ -706,23 +706,6 @@ class SiteEngine {
         }
     }
     
-startAutoScroll() {
-    if (this.carouselInterval) {
-        clearInterval(this.carouselInterval);
-    }
-
-    this.carouselInterval = setInterval(() => {
-        const items = document.querySelectorAll('.carousel-item');
-        this.currentIndex = (this.currentIndex < items.length - 1) ? this.currentIndex + 1 : 0;
-        this.updateCarousel();
-    }, 5000);
-}
-
-updateCarousel() {
-    const carouselInner = document.querySelector('.carousel-inner');
-    carouselInner.style.transform = `translateX(-${this.currentIndex * 100}%)`;
-}
-
 initCarousel() {
     const prevBtn = document.querySelector('.carousel-control.prev');
     const nextBtn = document.querySelector('.carousel-control.next');
@@ -742,6 +725,23 @@ initCarousel() {
 
     this.startAutoScroll();
 }
+
+startAutoScroll() {
+    if (this.carouselInterval) {
+        clearInterval(this.carouselInterval);
+    }
+
+    this.carouselInterval = setInterval(() => {
+        this.currentIndex = (this.currentIndex < this.carouselItems.length - 1) ? this.currentIndex + 1 : 0;
+        this.updateCarousel();
+    }, 5000);
+}
+
+updateCarousel() {
+    const carouselInner = document.querySelector('.carousel-inner');
+    carouselInner.style.transform = `translateX(-${this.currentIndex * 100}%)`;
+}
+
 
     
     resetAutoScroll() {
