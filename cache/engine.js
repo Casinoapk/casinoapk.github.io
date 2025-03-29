@@ -665,64 +665,75 @@ class SiteEngine {
     }
     
     renderCarouselItems() {
-        const carouselInner = document.querySelector('.carousel-inner');
-        carouselInner.innerHTML = '';
+    const carouselInner = document.querySelector('.carousel-inner');
+    carouselInner.innerHTML = '';
+    
+    this.carouselItems.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `carousel-item ${index === this.currentCarouselIndex ? 'active' : ''}`;
         
-        this.carouselItems.forEach((item, index) => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = `carousel-item ${index === 0 ? 'active' : ''}`;
-            
-            itemDiv.innerHTML = `
-                <div class="carousel-item-content">
-                    <div class="carousel-image" style="background-color: ${item.color}">
-                        <div class="image-text">${item.title}</div>
-                    </div>
-                    <div class="app-info">
-                        <h3 class="app-title">${item.title}</h3>
-                        <p>${item.description}</p>
-                    </div>
-                    <button class="download-btn" data-apk="${item.apkPath}">
-                        Скачать APK
-                    </button>
+        itemDiv.innerHTML = `
+            <div class="carousel-item-content">
+                <div class="carousel-image" style="background-color: ${item.color}">
+                    <div class="image-text">${item.title}</div>
                 </div>
-            `;
-            
-            carouselInner.appendChild(itemDiv);
-        });
+                <div class="app-info">
+                    <h3 class="app-title">${item.title}</h3>
+                    <p>${item.description}</p>
+                </div>
+                <button class="download-btn" data-apk="${item.apkPath}">
+                    Скачать APK
+                </button>
+            </div>
+        `;
+        
+        carouselInner.appendChild(itemDiv);
+    });
+}
+    
+render() {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+    
+    const template = this.cache.templates[this.currentView];
+    if (template) {
+        app.appendChild(document.importNode(template, true));
     }
     
-    render() {
-        const app = document.getElementById('app');
-        app.innerHTML = '';
-        
-        const template = this.cache.templates[this.currentView];
-        if (template) {
-            app.appendChild(document.importNode(template, true));
-        }
-        
-        if (this.currentView === 'main') {
-            this.renderCarouselItems();
+    if (this.currentView === 'main') {
+        this.renderCarouselItems();
+        // Используем setTimeout для гарантированной инициализации после отрисовки DOM
+        setTimeout(() => {
             this.initCarousel();
-        }
+        }, 0);
     }
+}
     
 initCarousel() {
+    const carouselInner = document.querySelector('.carousel-inner');
+    const items = document.querySelectorAll('.carousel-item');
     const prevBtn = document.querySelector('.carousel-control.prev');
     const nextBtn = document.querySelector('.carousel-control.next');
-    this.currentIndex = 0;
-
+    
+    const updateCarousel = () => {
+        carouselInner.style.transform = `translateX(-${this.currentCarouselIndex * 100}%)`;
+    };
+    
+    // Инициализируем карусель с текущим индексом
+    updateCarousel();
+    
     prevBtn.addEventListener('click', () => {
-        this.currentIndex = (this.currentIndex > 0) ? this.currentIndex - 1 : this.carouselItems.length - 1;
-        this.updateCarousel();
+        this.currentCarouselIndex = (this.currentCarouselIndex > 0) ? this.currentCarouselIndex - 1 : items.length - 1;
+        updateCarousel();
         this.resetAutoScroll();
     });
-
+    
     nextBtn.addEventListener('click', () => {
-        this.currentIndex = (this.currentIndex < this.carouselItems.length - 1) ? this.currentIndex + 1 : 0;
-        this.updateCarousel();
+        this.currentCarouselIndex = (this.currentCarouselIndex < items.length - 1) ? this.currentCarouselIndex + 1 : 0;
+        updateCarousel();
         this.resetAutoScroll();
     });
-
+    
     this.startAutoScroll();
 }
 
@@ -730,10 +741,11 @@ startAutoScroll() {
     if (this.carouselInterval) {
         clearInterval(this.carouselInterval);
     }
-
+    
     this.carouselInterval = setInterval(() => {
-        this.currentIndex = (this.currentIndex < this.carouselItems.length - 1) ? this.currentIndex + 1 : 0;
-        this.updateCarousel();
+        const items = document.querySelectorAll('.carousel-item');
+        this.currentCarouselIndex = (this.currentCarouselIndex < items.length - 1) ? this.currentCarouselIndex + 1 : 0;
+        document.querySelector('.carousel-inner').style.transform = `translateX(-${this.currentCarouselIndex * 100}%)`;
     }, 5000);
 }
 
