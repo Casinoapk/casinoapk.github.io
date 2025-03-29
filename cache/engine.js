@@ -706,57 +706,43 @@ class SiteEngine {
         }
     }
     
-    initCarousel() {
-        const carouselInner = document.querySelector('.carousel-inner');
-        const items = document.querySelectorAll('.carousel-item');
-        const prevBtn = document.querySelector('.carousel-control.prev');
-        const nextBtn = document.querySelector('.carousel-control.next');
-        
-        let currentIndex = 0;
-        const itemCount = items.length;
-        
-        const updateCarousel = () => {
-            carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
-        };
-        
-        prevBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex > 0) ? currentIndex - 1 : itemCount - 1;
-            updateCarousel();
-            this.resetAutoScroll();
-        });
-        
-        nextBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex < itemCount - 1) ? currentIndex + 1 : 0;
-            updateCarousel();
-            this.resetAutoScroll();
-        });
-        
-        this.startAutoScroll();
-    }
-    
 startAutoScroll() {
     if (this.carouselInterval) {
         clearInterval(this.carouselInterval);
     }
 
     this.carouselInterval = setInterval(() => {
-        const carouselInner = document.querySelector('.carousel-inner');
         const items = document.querySelectorAll('.carousel-item');
-
-        let currentIndex = 0;
-        let currentTransform = carouselInner.style.transform;
-
-        if (currentTransform) {
-            const match = currentTransform.match(/translateX\(-(\d+)%\)/);
-            if (match) {
-                currentIndex = parseInt(match[1]) / 100;
-            }
-        }
-
-        currentIndex = (currentIndex < items.length - 1) ? currentIndex + 1 : 0;
-        carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
-    }, 1000);
+        this.currentIndex = (this.currentIndex < items.length - 1) ? this.currentIndex + 1 : 0;
+        this.updateCarousel();
+    }, 5000);
 }
+
+updateCarousel() {
+    const carouselInner = document.querySelector('.carousel-inner');
+    carouselInner.style.transform = `translateX(-${this.currentIndex * 100}%)`;
+}
+
+initCarousel() {
+    const prevBtn = document.querySelector('.carousel-control.prev');
+    const nextBtn = document.querySelector('.carousel-control.next');
+    this.currentIndex = 0;
+
+    prevBtn.addEventListener('click', () => {
+        this.currentIndex = (this.currentIndex > 0) ? this.currentIndex - 1 : this.carouselItems.length - 1;
+        this.updateCarousel();
+        this.resetAutoScroll();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        this.currentIndex = (this.currentIndex < this.carouselItems.length - 1) ? this.currentIndex + 1 : 0;
+        this.updateCarousel();
+        this.resetAutoScroll();
+    });
+
+    this.startAutoScroll();
+}
+
     
     resetAutoScroll() {
         clearInterval(this.carouselInterval);
