@@ -9,11 +9,16 @@ class SiteEngine {
         this.currentView = 'main';
         this.isMobile = window.innerWidth <= 768;
         this.carouselItems = this.generateCarouselItems(16);
-        this.carouselInterval = null;
+        this.carousel = {
+            currentIndex: 0,
+            interval: null,
+            isAnimating: false
+        };
         
         this.init();
     }
-    
+
+    // Генерация элементов карусели
     generateCarouselItems(count) {
         const items = [];
         const colors = [
@@ -26,24 +31,25 @@ class SiteEngine {
         for (let i = 1; i <= count; i++) {
             items.push({
                 id: i,
-                title: `${i}`,
-                description: `${i}`,
+                title: `App ${i}`,
+                description: `Description for app ${i}`,
                 color: colors[i - 1],
                 apkPath: `app/${i}.apk`
             });
         }
         return items;
     }
-    
+
+    // Инициализация
     init() {
         this.cacheCSS();
         this.cacheTemplates();
         this.render();
         this.setupEventListeners();
-        
         window.addEventListener('resize', this.handleResize.bind(this));
     }
-    
+
+    // Обработчик изменения размера окна
     handleResize() {
         const newIsMobile = window.innerWidth <= 768;
         if (this.isMobile !== newIsMobile) {
@@ -51,17 +57,18 @@ class SiteEngine {
             this.render();
         }
     }
-    
+
+    // Кэширование CSS
     cacheCSS() {
         this.cache.css.main = `
-                :root {
-            --primary-color: #9b59b6; /* Фиолетовый - волшебство */
-            --secondary-color: #e74c3c; /* Красный - энергия */
-            --accent-color: #f1c40f; /* Желтый - веселье */
-            --text-color: #2c3e50; /* Темно-синий - контраст */
-            --light-color: #ecf0f1; /* Светло-серый */
-            --dark-color: #34495e; /* Темно-синий */
-            --magic-color: #1abc9c; /* Бирюзовый - магия */
+        :root {
+            --primary-color: #9b59b6;
+            --secondary-color: #e74c3c;
+            --accent-color: #f1c40f;
+            --text-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --magic-color: #1abc9c;
             --shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             --magic-shadow: 0 0 15px rgba(155, 89, 182, 0.5);
         }
@@ -551,21 +558,11 @@ class SiteEngine {
             background: linear-gradient(45deg, #c0392b, #e74c3c) !important;
         }
         
-        /* Анимации и декоративные элементы */
-        .magic-star {
-            position: absolute;
-            font-size: 1.2rem;
-            animation: float 3s ease-in-out infinite;
-            opacity: 0.7;
-            z-index: -1;
-        }
-        
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(10deg); }
         }
         
-        /* Мобильные стили */
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -650,117 +647,126 @@ class SiteEngine {
                 padding: 1rem;
                 font-size: 1.5rem;
             }
-        }
-    `;
+        }`;
         
         const style = document.createElement('style');
         style.textContent = this.cache.css.main;
         document.head.appendChild(style);
     }
-    
-    cacheTemplates() {
-        this.cache.templates.main = document.getElementById('main-template').content;
-        this.cache.templates.login = document.getElementById('login-template').content;
-        this.cache.templates.register = document.getElementById('register-template').content;
-    }
-    
+
+    // Рендер элементов карусели
     renderCarouselItems() {
-    const carouselInner = document.querySelector('.carousel-inner');
-    carouselInner.innerHTML = '';
-    
-    this.carouselItems.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = `carousel-item ${index === this.currentCarouselIndex ? 'active' : ''}`;
+        const carouselInner = document.querySelector('.carousel-inner');
+        carouselInner.innerHTML = '';
         
-        itemDiv.innerHTML = `
-            <div class="carousel-item-content">
-                <div class="carousel-image" style="background-color: ${item.color}">
-                    <div class="image-text">${item.title}</div>
+        this.carouselItems.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = `carousel-item ${index === this.carousel.currentIndex ? 'active' : ''}`;
+            
+            itemDiv.innerHTML = `
+                <div class="carousel-item-content">
+                    <div class="carousel-image" style="background-color: ${item.color}">
+                        <div class="image-text">${item.title}</div>
+                    </div>
+                    <div class="app-info">
+                        <h3 class="app-title">${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                    <button class="download-btn" data-apk="${item.apkPath}">
+                        Скачать APK
+                    </button>
                 </div>
-                <div class="app-info">
-                    <h3 class="app-title">${item.title}</h3>
-                    <p>${item.description}</p>
-                </div>
-                <button class="download-btn" data-apk="${item.apkPath}">
-                    Скачать APK
-                </button>
-            </div>
-        `;
+            `;
+            
+            carouselInner.appendChild(itemDiv);
+        });
+    }
+
+    // Основной рендер
+    render() {
+        const app = document.getElementById('app');
+        app.innerHTML = '';
         
-        carouselInner.appendChild(itemDiv);
-    });
-}
-    
-render() {
-    const app = document.getElementById('app');
-    app.innerHTML = '';
-    
-    const template = this.cache.templates[this.currentView];
-    if (template) {
-        app.appendChild(document.importNode(template, true));
+        const template = this.cache.templates[this.currentView];
+        if (template) {
+            app.appendChild(document.importNode(template, true));
+        }
+        
+        if (this.currentView === 'main') {
+            this.renderCarouselItems();
+            setTimeout(() => {
+                this.initCarousel();
+            }, 0);
+        }
     }
-    
-    if (this.currentView === 'main') {
-        this.renderCarouselItems();
-        // Используем setTimeout для гарантированной инициализации после отрисовки DOM
-        setTimeout(() => {
-            this.initCarousel();
-        }, 0);
-    }
-}
-    
-initCarousel() {
-    const carouselInner = document.querySelector('.carousel-inner');
-    const items = document.querySelectorAll('.carousel-item');
-    const prevBtn = document.querySelector('.carousel-control.prev');
-    const nextBtn = document.querySelector('.carousel-control.next');
-    
-    const updateCarousel = () => {
-        carouselInner.style.transform = `translateX(-${this.currentCarouselIndex * 100}%)`;
-    };
-    
-    // Инициализируем карусель с текущим индексом
-    updateCarousel();
-    
-    prevBtn.addEventListener('click', () => {
-        this.currentCarouselIndex = (this.currentCarouselIndex > 0) ? this.currentCarouselIndex - 1 : items.length - 1;
-        updateCarousel();
-        this.resetAutoScroll();
-    });
-    
-    nextBtn.addEventListener('click', () => {
-        this.currentCarouselIndex = (this.currentCarouselIndex < items.length - 1) ? this.currentCarouselIndex + 1 : 0;
-        updateCarousel();
-        this.resetAutoScroll();
-    });
-    
-    this.startAutoScroll();
-}
 
-startAutoScroll() {
-    if (this.carouselInterval) {
-        clearInterval(this.carouselInterval);
-    }
-    
-    this.carouselInterval = setInterval(() => {
-        const items = document.querySelectorAll('.carousel-item');
-        this.currentCarouselIndex = (this.currentCarouselIndex < items.length - 1) ? this.currentCarouselIndex + 1 : 0;
-        document.querySelector('.carousel-inner').style.transform = `translateX(-${this.currentCarouselIndex * 100}%)`;
-    }, 5000);
-}
-
-updateCarousel() {
-    const carouselInner = document.querySelector('.carousel-inner');
-    carouselInner.style.transform = `translateX(-${this.currentIndex * 100}%)`;
-}
-
-
-    
-    resetAutoScroll() {
-        clearInterval(this.carouselInterval);
+    // Инициализация карусели
+    initCarousel() {
+        const carouselInner = document.querySelector('.carousel-inner');
+        const prevBtn = document.querySelector('.carousel-control.prev');
+        const nextBtn = document.querySelector('.carousel-control.next');
+        
+        this.updateCarouselPosition();
+        
+        prevBtn.addEventListener('click', () => {
+            if (this.carousel.isAnimating) return;
+            this.carousel.currentIndex = (this.carousel.currentIndex > 0) 
+                ? this.carousel.currentIndex - 1 
+                : this.carouselItems.length - 1;
+            this.updateCarouselPosition();
+            this.resetAutoScroll();
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (this.carousel.isAnimating) return;
+            this.carousel.currentIndex = (this.carousel.currentIndex < this.carouselItems.length - 1) 
+                ? this.carousel.currentIndex + 1 
+                : 0;
+            this.updateCarouselPosition();
+            this.resetAutoScroll();
+        });
+        
         this.startAutoScroll();
     }
-    
+
+    // Обновление позиции карусели
+    updateCarouselPosition() {
+        const carouselInner = document.querySelector('.carousel-inner');
+        if (!carouselInner) return;
+        
+        this.carousel.isAnimating = true;
+        carouselInner.style.transition = 'transform 0.5s ease';
+        carouselInner.style.transform = `translateX(-${this.carousel.currentIndex * 100}%)`;
+        
+        setTimeout(() => {
+            this.carousel.isAnimating = false;
+        }, 500);
+    }
+
+    // Автопрокрутка
+    startAutoScroll() {
+        if (this.carousel.interval) {
+            clearInterval(this.carousel.interval);
+        }
+        
+        this.carousel.interval = setInterval(() => {
+            if (this.carousel.isAnimating) return;
+            
+            this.carousel.currentIndex = (this.carousel.currentIndex < this.carouselItems.length - 1) 
+                ? this.carousel.currentIndex + 1 
+                : 0;
+            
+            this.updateCarouselPosition();
+        }, 5000);
+    }
+
+    // Сброс автоскролла
+    resetAutoScroll() {
+        clearInterval(this.carousel.interval);
+        this.startAutoScroll();
+    }
+
+    // Настройка обработчиков событий
     setupEventListeners() {
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('login-btn')) {
@@ -783,41 +789,45 @@ updateCarousel() {
             }
         });
     }
-    
+
+    // Показать форму авторизации
     showAuth(view) {
         this.currentView = view;
         this.render();
-        clearInterval(this.carouselInterval);
+        clearInterval(this.carousel.interval);
     }
-    
+
+    // Показать главную страницу
     showMain() {
         this.currentView = 'main';
         this.render();
     }
-    
+
+    // Переключение меню
     toggleMenu() {
         const navList = document.getElementById('nav-list');
         if (navList) {
             navList.classList.toggle('show');
         }
     }
-    
+
+    // Обработка скачивания
     handleDownload(button) {
         const apkPath = button.getAttribute('data-apk');
         this.downloadApk(apkPath);
     }
-    
+
+    // Обработка отправки формы
     handleAuthSubmit() {
         alert('Форма отправлена!');
         this.showMain();
     }
-    
+
+    // Эмуляция скачивания
     downloadApk(apkPath) {
-        // В реальном проекте здесь должно быть реальное скачивание
         console.log(`Скачивание APK: ${apkPath}`);
         alert(`Скачивание: ${apkPath.split('/').pop()}`);
         
-        // Эмуляция скачивания
         const link = document.createElement('a');
         link.href = apkPath;
         link.download = apkPath.split('/').pop();
@@ -825,14 +835,15 @@ updateCarousel() {
         link.click();
         document.body.removeChild(link);
     }
-    
+
+    // Очистка
     destroy() {
         window.removeEventListener('resize', this.handleResize);
-        clearInterval(this.carouselInterval);
+        clearInterval(this.carousel.interval);
     }
 }
 
-// Инициализация движка
+// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     window.siteEngine = new SiteEngine();
 });
